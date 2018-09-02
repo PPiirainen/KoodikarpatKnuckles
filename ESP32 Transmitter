@@ -1,0 +1,96 @@
+#include <esp_now.h>
+#include <WiFi.h>
+
+#define CHANNEL 3
+
+esp_now_peer_info_t peer;
+uint16_t finger_array[5];
+int sent = 0;
+uint8_t new_fingers[10];
+uint8_t slave_addr[6] = {0xB4,0xE6,0x2D,0xCF,0x75,0x9A};
+
+void finger_cutter (){
+ for(uint8_t i=0; i<5;i++) {
+  new_fingers[i*2] = finger_array[i]>>8;
+  new_fingers[i*2+1] =(uint8_t) finger_array[i];
+  }
+}
+  
+void addPeer(uint8_t *peerMacAddress){
+    //Informamos o canal
+    peer.channel = CHANNEL;
+    peer.encrypt = 0;
+    memcpy(peer.peer_addr, peerMacAddress, 6);
+    esp_now_add_peer((esp_now_peer_info_t *)(&peer.peer_addr));
+}
+
+
+void InitESPNow() {
+  WiFi.disconnect();
+  if (esp_now_init() == ESP_OK) {
+   // Serial.println("ESPNow Init Success");
+  }
+  else {
+    //Serial.println("ESPNow Init Failed");
+    ESP.restart();
+  }
+}
+
+
+void sendData() {
+  //Serial.print("Sending: "); 
+  esp_err_t result = esp_now_send(&(slave_addr[0]), &(new_fingers[0]), 10);
+ // Serial.print("Send Status: ");
+  //if (result == ESP_OK) {
+   // Serial.println("Success");
+  //} else if (result == ESP_ERR_ESPNOW_NOT_INIT) {
+    // How did we get so far!!
+    //Serial.println("ESPNOW not Init.");
+  //} else if (result == ESP_ERR_ESPNOW_ARG) {
+    //Serial.println("Invalid Argument");
+  //} else if (result == ESP_ERR_ESPNOW_INTERNAL) {
+    //Serial.println("Internal Error");
+ // } else if (result == ESP_ERR_ESPNOW_NO_MEM) {
+    //Serial.println("ESP_ERR_ESPNOW_NO_MEM");
+ // } else if (result == ESP_ERR_ESPNOW_NOT_FOUND) {
+    //Serial.println("Peer not found.");
+  //} else {
+    //Serial.println("Not sure what happened");
+ // }
+}
+
+
+void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
+  char macStr[18];
+  snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x", mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
+  //Serial.print("Last Packet Sent to: "); Serial.println(macStr);
+  //Serial.print("Last Packet Send Status: "); Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
+}
+
+void setup() {
+  WiFi.mode(WIFI_STA);
+  Serial.begin(115200);
+  InitESPNow();
+  addPeer(&(slave_addr[0]));
+  //Serial.println("ESPNow/Basic/Master Example");
+  //Serial.print("STA MAC: "); Serial.println(WiFi.macAddress());
+  //esp_now_register_send_cb(OnDataSent);
+  //esp_err_t esp_wifi_set_max_tx_power(-127);
+}
+
+void loop() {
+  //int mr = micros();
+ // Serial.println(sent++);
+  finger_array[0] = (uint16_t) analogRead(36); finger_array[1] = (uint16_t) analogRead(39);
+  finger_array[2] = (uint16_t) analogRead(0); finger_array[3] = (uint16_t) analogRead(0);
+  finger_array[4] = (uint16_t) analogRead(0);
+  Serial.println(finger_array[0]); Serial.println(finger_array[1]);
+  //  Serial.println(finger_array[2]);
+  // Serial.println(finger_array[3]); Serial.println(finger_array[4]);
+  
+  finger_cutter(); 
+  sendData();
+ // int mr_c = micros();
+  //Serial.println(mr_c - mr);
+  delay(10);
+}
