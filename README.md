@@ -3,6 +3,8 @@ ESP32NOW! based VR finger trakker used with Vive trakker
  example usage: https://gfycat.com/EsteemedConcreteBats 
 code is offered "as is" This project is on hold until summer '19 if not otherwise stated. 
 
+Works on two ESP32-Wrooms. Other one reads the fingers and transmittes the data via ESPNOW! link to other ESP32 that resieves the data and pushes it to serial. 
+
 This was  the result of Koodikarpat.com 2018 - a technological   summer school project meant for teens from 15 to 17 years old.
 
 One of our projects was to design ,3D-print and play test new type controllers for VR. We manage to develop our own finger tracker in little over 2 weeks.
