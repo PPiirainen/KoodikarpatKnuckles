@@ -1,7 +1,7 @@
 
 ESP32NOW! based VR finger trakker used with Vive trakker
  example usage: https://gfycat.com/EsteemedConcreteBats 
-code is offered "as is" This project is on hold until summer '19 if not otherwise stated. 
+Everything is offered "as is" This project is on hold until summer '19 if not otherwise stated. 
 
 Works on two ESP32-Wrooms. Other one reads the fingers and transmittes the data via ESPNOW! link to other ESP32 that resieves the data and pushes it to serial. 
 
