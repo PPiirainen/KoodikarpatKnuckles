@@ -13,6 +13,6 @@ The team consists of students learning 3D designing ,3D printing,ESP/arduino cod
 
 The glove uses combination of Flex sensors,ESP32, ESPNow for wireless datalink and 18650 for power. and Vive Tracker for positional tracking of course.
 
-The tracking is very responsive. There are no lag to see in vr. And of course only 2 fingers at the moment.
+The tracking is very responsive. There are no lag to see in VR. And of course only for 2 fingers at the moment.
 
 This was of course heavily inspired by u/jimmygray_ and others alike work with similar kind of devises.
